@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+/* Design tokens.
+   Idea: an apartment block at dusk. Dark navy "ink" is the building, amber "glow" is a lit window,
+   blue "brand" is the one color used for actions. Cards stay flat; only floating things get a shadow. */
+@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Bricolage Grotesque", "Figtree", ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink-950: #0b1424;
+  --color-ink-900: #101c33;
+  --color-ink-800: #182742;
+  --color-ink-700: #233556;
+  --color-ink-600: #33476d;
+
+  --color-brand-50: #eef2ff;
+  --color-brand-100: #dfe6ff;
+  --color-brand-500: #4663e4;
+  --color-brand-600: #2f4bd0;
+  --color-brand-700: #273ca8;
+  --color-brand-800: #243586;
+
+  --color-glow-300: #fadf8f;
+  --color-glow-400: #f7cf66;
+  --color-glow-500: #f2bb3b;
+
+  --color-surface: #f3f5f9;
+  --color-line: #dfe4ed;
+
+  --color-ok-50: #e8f6ef;
+  --color-ok-600: #12805c;
+  --color-ok-700: #0e6a4c;
+  --color-bad-50: #fdecea;
+  --color-bad-600: #c0362c;
+  --color-bad-700: #a12a21;
+
+  --shadow-float: 0 16px 40px -12px rgb(11 20 36 / 0.45), 0 2px 8px rgb(11 20 36 / 0.15);
+
+  /* The one orchestrated moment: windows light up when a building appears. */
+  --animate-window-on: window-on 0.9s ease-out both;
+  --animate-toast-in: toast-in 0.3s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+  --animate-dialog-in: dialog-in 0.2s ease-out both;
+
+  @keyframes window-on {
+    from {
+      background-color: var(--color-ink-700);
+      box-shadow: none;
+      color: transparent;
+    }
+  }
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(-12px) scale(0.97);
+    }
+  }
+  @keyframes dialog-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px) scale(0.98);
+    }
+  }
+}
+
+@keyframes toast-bar {
+  from {
+    transform: scaleX(1);
+  }
+  to {
+    transform: scaleX(0);
+  }
+}
+
+html {
+  background: var(--color-surface);
+}
+
+body {
+  font-family: var(--font-sans);
+  color: #0f172a;
+  background: var(--color-surface);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  letter-spacing: -0.01em;
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-brand-500);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+
+/* ---------- Printing ----------
+   The report sheet (components/ReportActions.jsx) is hidden on screen. When printing, the whole app is
+   hidden and only the sheet is drawn. */
+#print-root {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  html,
+  body {
+    background: #fff !important;
+  }
+  #root {
+    display: none !important;
+  }
+  #print-root {
+    display: block;
+    color: #101c33;
+    font-family: "Figtree", system-ui, sans-serif;
+    font-size: 10.5pt;
+    line-height: 1.4;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  #print-root .sheet-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    margin-bottom: 14px;
+    background: #182742;
+    color: #fff;
+    border-bottom: 4px solid #f7cf66;
+    border-radius: 6px;
+  }
+  #print-root .sheet-head h1 {
+    margin: 0;
+    font-size: 20pt;
+    font-weight: 700;
+  }
+  #print-root .sheet-head p {
+    margin: 4px 0 0;
+    color: #cbd5e1;
+  }
+  #print-root .sheet-photo {
+    width: 26mm;
+    height: 26mm;
+    object-fit: cover;
+    border-radius: 6px;
+  }
+  #print-root .sheet-section {
+    margin-bottom: 12px;
+    break-inside: avoid;
+  }
+  #print-root .sheet-section h2 {
+    margin: 0 0 8px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #dfe4ed;
+    color: #2f4bd0;
+    font-size: 12pt;
+    font-weight: 700;
+  }
+  #print-root dl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px 24px;
+    margin: 0;
+  }
+  #print-root dl > div {
+    break-inside: avoid;
+  }
+  #print-root dt {
+    color: #647085;
+    font-size: 8pt;
+  }
+  #print-root dd {
+    margin: 0;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+  #print-root .sheet-docs {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 12px;
+  }
+  #print-root figure {
+    margin: 0;
+    break-inside: avoid;
+  }
+  #print-root figcaption {
+    margin-bottom: 4px;
+    font-weight: 700;
+    font-size: 9pt;
+  }
+  #print-root figure img {
+    width: 100%;
+    max-height: 60mm;
+    object-fit: contain;
+    border: 1px solid #dfe4ed;
+    border-radius: 4px;
+  }
+  #print-root small {
+    color: #647085;
+    overflow-wrap: anywhere;
+  }
+  #print-root .sheet-foot {
+    margin-top: 10px;
+    padding-top: 6px;
+    border-top: 1px solid #dfe4ed;
+    color: #647085;
+    font-size: 8pt;
+  }
+}
