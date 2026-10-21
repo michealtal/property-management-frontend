@@ -10,6 +10,8 @@ const DOCS = [
   ['passportPhoto', 'Passport Photograph'],
   ['idDocument', 'ID Document'],
   ['workId', 'Work ID'],
+  ['tenancyAgreement', 'Tenancy Agreement'],
+  ['rentReceipt', 'Rent Receipt'],
 ];
 
 const DASH = '—';

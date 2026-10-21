@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { createPortal, flushSync } from 'react-dom';
 import { toast } from '../store/toast';
+import { isPdfUrl } from '../lib/tenant';
 import { Button } from './ui';
 
 // The printable page. It is hidden on screen and is the only thing drawn when printing (see index.css).
@@ -34,7 +35,7 @@ function Sheet({ report }) {
             {report.docs.map((d) => (
               <figure key={d.label}>
                 <figcaption>{d.label}</figcaption>
-                {d.url ? <img src={d.url} alt="" onError={(e) => e.currentTarget.replaceWith(Object.assign(document.createElement('small'), { textContent: d.url }))} /> : <small>Not uploaded</small>}
+                {d.url && isPdfUrl(d.url) ? <small>PDF file: {d.url}</small> : d.url ? <img src={d.url} alt="" onError={(e) => e.currentTarget.replaceWith(Object.assign(document.createElement('small'), { textContent: d.url }))} /> : <small>Not uploaded</small>}
               </figure>
             ))}
           </div>

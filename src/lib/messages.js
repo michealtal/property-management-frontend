@@ -129,5 +129,6 @@ export const V = {
   declaration: 'Please confirm the declaration.',
   fileImage: 'Only JPG, PNG or WebP.',
   fileDocument: 'Only images or PDFs allowed.',
+  filePdf: 'Only PDF files allowed.',
   fileSize: (mb) => `File exceeds the ${mb} MB limit.`,
 };

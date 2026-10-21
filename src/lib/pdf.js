@@ -1,4 +1,5 @@
 import { sizedUrl } from './image';
+import { isPdfUrl } from './tenant';
 
 // Draws a report (see report.js) as a PDF and saves it. The PDF library and the fonts are only
 // downloaded when the button is pressed, so they do not slow the rest of the app.
@@ -21,7 +22,7 @@ async function fontBase64(file) {
 
 // A picture as a JPEG the PDF can hold. Returns null for anything that cannot be read (a PDF file, a blocked link).
 async function loadImage(url, maxSide = 900) {
-  if (!url) return null;
+  if (!url || isPdfUrl(url)) return null; // a PDF is linked, not drawn
   try {
     const response = await fetch(sizedUrl(url, maxSide), { mode: 'cors' });
     if (!response.ok) return null;

@@ -11,6 +11,12 @@ export const FILE_KINDS = {
     hint: 'JPG, PNG or WebP',
     typeError: V.fileImage,
   },
+  pdf: {
+    accept: 'application/pdf',
+    types: ['application/pdf'],
+    hint: 'PDF only',
+    typeError: V.filePdf,
+  },
   document: {
     accept: [...IMAGES, 'application/pdf'].join(','),
     types: [...IMAGES, 'application/pdf'],

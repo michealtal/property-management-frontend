@@ -5,7 +5,7 @@ import { toast } from '../store/toast';
 import { errMsg } from '../lib/format';
 import { FILE_KINDS, MAX_FILE_MB, checkFile } from '../lib/files';
 import { previewUrl, shrinkImage } from '../lib/image';
-import { docUrl } from '../lib/tenant';
+import { docUrl, isPdfUrl as isPdf } from '../lib/tenant';
 import { FAIL, OK } from '../lib/messages';
 import Icon from './Icon';
 import { Card, Spinner } from './ui';
@@ -17,7 +17,11 @@ export const DOC_LIST = [
   ['workId', 'Work ID', 'document'],
 ];
 
-const isPdf = (url) => /\.pdf($|[?#])/i.test(url) || /\/raw\/upload\//.test(url);
+// Added after the tenant moves in. PDF only.
+export const PAPER_LIST = [
+  ['tenancyAgreement', 'Tenancy Agreement', 'pdf'],
+  ['rentReceipt', 'Rent Receipt', 'pdf'],
+];
 
 const small =
   'inline-flex items-center gap-1.5 rounded-md border border-line bg-white px-2.5 py-1.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 disabled:opacity-60';
@@ -128,13 +132,21 @@ function DocCard({ tenant, id, docKey, label, kind }) {
   );
 }
 
-// The three tenant documents: always previewed, can be hidden, replaced or uploaded right here.
+// The tenant's documents: always previewed, can be hidden, replaced or uploaded right here.
 export default function TenantDocs({ tenant, id }) {
   return (
-    <div className="mb-6 grid gap-4 lg:grid-cols-3">
-      {DOC_LIST.map(([key, label, kind]) => (
-        <DocCard key={key} tenant={tenant} id={id} docKey={key} label={label} kind={kind} />
-      ))}
-    </div>
+    <>
+      <div className="mb-6 grid gap-4 lg:grid-cols-3">
+        {DOC_LIST.map(([key, label, kind]) => (
+          <DocCard key={key} tenant={tenant} id={id} docKey={key} label={label} kind={kind} />
+        ))}
+      </div>
+      <h2 className="mb-3 text-lg font-semibold text-ink-900">Tenancy papers</h2>
+      <div className="mb-6 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        {PAPER_LIST.map(([key, label, kind]) => (
+          <DocCard key={key} tenant={tenant} id={id} docKey={key} label={label} kind={kind} />
+        ))}
+      </div>
+    </>
   );
 }

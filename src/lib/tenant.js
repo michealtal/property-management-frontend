@@ -1,5 +1,5 @@
 import { get } from './format';
-import { DOC_URL_PATHS } from './uploadConfig';
+import { DOC_URL_PATHS, PAPER_URL_PATHS } from './uploadConfig';
 
 // A file link can arrive as a string or as { url } / { secure_url }.
 // Only web links and local previews are accepted: a "javascript:" link from the server is dropped.
@@ -16,6 +16,9 @@ export function apartmentIdOf(tenant) {
   return apartment && typeof apartment === 'object' ? (apartment._id ?? apartment.id) : apartment;
 }
 
+// True for a link to a PDF (Cloudinary may store it as an image or as a raw file).
+export const isPdfUrl = (url) => /\.pdf($|[?#])/i.test(url) || /\/raw\/upload\//.test(url);
+
 export const tenantName = (t) => get(t, 'personalInformation.fullName') || 'Unnamed tenant';
 export const tenantPhone = (t) => get(t, 'personalInformation.phoneNumbers.0') || '';
 export const tenantEmail = (t) => get(t, 'personalInformation.email') || '';
@@ -25,6 +28,8 @@ const NAME_PATTERNS = {
   passportPhoto: /passport|photo|picture|portrait|avatar/i,
   idDocument: /^(id|identity|identification)(card|document|doc|image|file|upload|scan|photo|picture)?$|^id(card|document|doc|image|file|upload|scan)/i,
   workId: /work.?id|staff.?id|employ\w*.?(id|card|document|doc)\b/i,
+  tenancyAgreement: /tenancy.?agreement/i,
+  rentReceipt: /rent.?receipt/i,
 };
 
 function deepFind(node, pattern, depth = 0) {
@@ -55,7 +60,7 @@ function deepFind(node, pattern, depth = 0) {
 }
 
 export function docUrl(tenant, key) {
-  for (const path of DOC_URL_PATHS[key] || [key]) {
+  for (const path of DOC_URL_PATHS[key] || PAPER_URL_PATHS[key] || [key]) {
     const url = fileUrl(get(tenant, path));
     if (url) return url;
   }

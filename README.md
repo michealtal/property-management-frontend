@@ -83,6 +83,15 @@ Editing uses `PATCH /api/tenants/:id`. Profile edits send only the fields that c
 **Apartment status.** The API stores `vacant` / `occupied`. The app shows "Vacant" / "Occupied". An apartment
 counts as Occupied when it has a tenant or was marked Occupied.
 
+## Tenancy papers (v0.6.0)
+
+The tenant page has a "Tenancy papers" section with two PDF-only tiles: **Tenancy Agreement** (`tenancyAgreement`) and
+**Rent Receipt** (`rentReceipt`). They use the same `PATCH /api/tenants/:id/documents` (multipart) as the other documents: two extra fields, `tenancyAgreement` and `rentReceipt`.
+The server saves `tenancyAgreementUrl` / `tenancyAgreementPublicId` and `rentReceiptUrl` / `rentReceiptPublicId`.
+They are not in the 7-step form, do not count as "missing documents", and are not kept in the browser's saved copy.
+A new rent receipt replaces the old one: ask the backend developer if receipts should become a list.
+Routes and names: `src/lib/uploadConfig.js` (`TENANT_UPLOAD_GROUPS`, `PAPER_URL_PATHS`).
+
 ## Confirm with the backend developer
 
 These are guesses, each in one place, until confirmed:
